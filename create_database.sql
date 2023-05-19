@@ -1,0 +1,215 @@
+create database DO_AN_WEB
+go
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[SANPHAM]    Script Date: 5/19/2023 8:00:37 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[SANPHAM](
+	[ma_sp] [int] IDENTITY(1,1) NOT NULL,
+	[ten_sp] [nvarchar](50) NULL,
+	[loai] [nvarchar](50) NULL,
+	[ten_nhacc] [nvarchar](50) NULL,
+	[gia_nhap] [real] NULL,
+	[gia_ban] [real] NULL,
+	[mau_sp] [nchar](20) NULL,
+	[soluong_ton] [int] NULL,
+	[hinh_anh_sp] [text] NULL,
+ CONSTRAINT [PK_SANPHAM] PRIMARY KEY CLUSTERED 
+(
+	[ma_sp] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[QUANLY]    Script Date: 5/19/2023 8:02:33 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[QUANLY](
+	[maquanly] [int] IDENTITY(1,1) NOT NULL,
+	[tenquanly] [nvarchar](50) NOT NULL,
+	[email_ql] [nchar](50) NOT NULL,
+	[password] [nvarchar](50) NOT NULL,
+	[sdt_ql] [char](11) NOT NULL,
+ CONSTRAINT [PK_QUANLY] PRIMARY KEY CLUSTERED 
+(
+	[maquanly] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[NHACUNGCAP]    Script Date: 5/19/2023 8:02:53 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[NHACUNGCAP](
+	[ma_nhacc] [int] IDENTITY(1,1) NOT NULL,
+	[ten_nhacc] [nvarchar](50) NOT NULL,
+	[sdt_nhacc] [char](11) NOT NULL,
+	[email_nhacc] [nchar](50) NOT NULL,
+	[diachi_nhacc] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_NHACUNGCAP] PRIMARY KEY CLUSTERED 
+(
+	[ma_nhacc] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[KHACHHANG]    Script Date: 5/19/2023 8:03:07 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[KHACHHANG](
+	[ma_kh] [int] IDENTITY(1,1) NOT NULL,
+	[ten_kh] [nvarchar](50) NOT NULL,
+	[tuoi_kh] [int] NOT NULL,
+	[gioi_tinh] [nvarchar](10) NOT NULL,
+	[sdt_kh] [char](11) NOT NULL,
+	[mk_kh] [nchar](20) NOT NULL,
+	[email_kh] [nchar](50) NOT NULL,
+	[diachi_kh] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PK_KHACHHANG] PRIMARY KEY CLUSTERED 
+(
+	[ma_kh] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[email_kh] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[HOADONNHAP]    Script Date: 5/19/2023 8:03:31 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[HOADONNHAP](
+	[mahoadon_nhap] [int] IDENTITY(1,1) NOT NULL,
+	[ma_nhacc] [int] NOT NULL,
+	[tongtien_nhap] [real] NOT NULL,
+	[ngay_nhap] [date] NOT NULL,
+ CONSTRAINT [PK_HOADONNHAP] PRIMARY KEY CLUSTERED 
+(
+	[mahoadon_nhap] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[HOADONNHAP]  WITH CHECK ADD  CONSTRAINT [FK_HOADONNHAP_NHACUNGCAP] FOREIGN KEY([ma_nhacc])
+REFERENCES [dbo].[NHACUNGCAP] ([ma_nhacc])
+GO
+
+ALTER TABLE [dbo].[HOADONNHAP] CHECK CONSTRAINT [FK_HOADONNHAP_NHACUNGCAP]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[HOADONBAN]    Script Date: 5/19/2023 8:03:43 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[HOADONBAN](
+	[mahoadon_ban] [int] IDENTITY(1,1) NOT NULL,
+	[ma_kh] [int] NOT NULL,
+	[tongtien_ban] [real] NOT NULL,
+	[ngay_ban] [date] NOT NULL,
+	[trang_thai] [smallint] NOT NULL,
+ CONSTRAINT [PK_HOADONBAN] PRIMARY KEY CLUSTERED 
+(
+	[mahoadon_ban] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[CTHOADONNHAP]    Script Date: 5/19/2023 8:03:57 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CTHOADONNHAP](
+	[macthoadon_nhap] [int] IDENTITY(1,1) NOT NULL,
+	[mahoadon_nhap] [int] NOT NULL,
+	[ma_sp] [int] NOT NULL,
+	[ten_sp] [nvarchar](50) NOT NULL,
+	[loai] [nvarchar](50) NOT NULL,
+	[dongia_nhap] [real] NOT NULL,
+	[soluong_nhap] [int] NOT NULL,
+ CONSTRAINT [PK_CTHOADONNHAP] PRIMARY KEY CLUSTERED 
+(
+	[macthoadon_nhap] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [DO_AN_WEB]
+GO
+
+/****** Object:  Table [dbo].[CTHOADONBAN]    Script Date: 5/19/2023 8:04:10 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[CTHOADONBAN](
+	[macthoadon_ban] [int] IDENTITY(1,1) NOT NULL,
+	[mahoadon_ban] [int] NOT NULL,
+	[ma_sp] [int] NOT NULL,
+	[ten_sp] [nvarchar](50) NOT NULL,
+	[loai] [nvarchar](50) NOT NULL,
+	[dongia_ban] [real] NOT NULL,
+	[soluong_ban] [int] NOT NULL,
+ CONSTRAINT [PK_CTHOADONBAN] PRIMARY KEY CLUSTERED 
+(
+	[macthoadon_ban] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+

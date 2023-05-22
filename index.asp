@@ -1,7 +1,5 @@
-
 <!--#include file="connect.asp"-->
 <%
-    ' code here to retrive the data from product table
     Dim sqlString, rs
     sqlString = "Select * from SANPHAM"
     connDB.Open()
@@ -119,8 +117,17 @@ set rs = connDB.execute(sqlString)
         font-weight: 600;
         border-radius: 20px;
       }
-      .user-icon a{
+      .user-icon{
         padding: 10px 12px;
+      }
+      .logout-icon{
+        padding: 12px 12px;
+        border-radius: 50px;
+      }
+      .welcome-mess{
+        color: #fff;
+        font-size: 16px;
+        font-weight: 600;
       }
       a.active,a:hover{
         background: white;
@@ -877,7 +884,18 @@ set rs = connDB.execute(sqlString)
           <li><a href="#">About</a></li>
           <li><a href="#product" target="_self">Products</a></li>
           <li><a href="#contact" target="_self">Contact</a></li>
-          <li><div class="user-icon"><a href="#"><i class="fa-solid fa-user"></i></a></div></li>
+          <li><%
+                    If (NOT isnull(Session("email_kh"))) AND (TRIM(Session("email_kh"))<>"") Then
+                %>
+                    <a href="logout.asp" class="logout-icon"><style class="fa fa-sign-out"></style></a>
+                    <span class="welcome-mess">Welcome <%=Session("email_kh")%>!</span>
+                <%                        
+                    Else
+                %>                
+                        <a href="login.asp" class="user-icon"><i class="fa-solid fa-user"></i></a>
+                <%
+                    End If
+                %></li>
         </ul>
       </nav>
       <section></section>

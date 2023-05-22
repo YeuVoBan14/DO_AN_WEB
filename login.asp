@@ -74,30 +74,40 @@
 %>
 <div class="error">
 <%
-If Request.Form("submit") <> "" Then
-    Dim username
-    username = Request.Form("username")
-    Dim password
-    password = Request.Form("password")
-    
-    Dim conn
-    Set conn = Server.CreateObject("ADODB.Connection")
-    conn.Open "Provider=SQLOLEDB;Data Source=YEUVOBAN\SQLEXPRESS;Initial Catalog=DO_AN_WEB;User ID=sa;Password=1234;"
-    Dim rs
-    Set rs = Server.CreateObject("ADODB.Recordset")
-    rs.Open "SELECT * FROM QUANLY WHERE email_ql = '" & username & "' AND password = '" & password & "'", conn
-    If rs.EOF Then
-        'Response.Write(Session("Error"))
-        Response.Write("<p>Invalid input. Try again</p>")
+Dim email_kh, password
+email_kh = Request.Form("email_kh")
+password = Request.Form("password")
+If (NOT isnull(email_kh) AND NOT isnull(password) AND TRIM(email_kh)<>"" AND TRIM(password)<>"" ) Then
+    ' true
+    Dim sql
+    sql = "select * from KHACHHANG where email_kh= ? and mk_kh= ?"
+    Dim cmdPrep
+    set cmdPrep = Server.CreateObject("ADODB.Command")
+    connDB.Open()
+    cmdPrep.ActiveConnection = connDB
+    cmdPrep.CommandType=1
+    cmdPrep.Prepared=true
+    cmdPrep.CommandText = sql
+    cmdPrep.Parameters(0)=email_kh
+    cmdPrep.Parameters(1)=password
+    Dim result
+    set result = cmdPrep.execute()
+    'kiem tra ket qua result o day
+    If not result.EOF Then
+        ' dang nhap thanh cong
+        Session("email_kh")=result("email_kh")
+        Session("Success")="Login Successfully"
+        Response.redirect("index.asp")
     Else
-        Session("authenticated") = True
-        Response.Redirect "index.asp"
-    End If
-    rs.Close
-    Set rs = Nothing
-    conn.Close
-    Set conn = Nothing
-End If
+        ' dang nhap ko thanh cong
+        Session("Error") = "Wrong email or password"
+    End if
+    result.Close()
+    connDB.Close()
+Else
+    ' false
+    Session("Error")="Please input email and password."
+End if
 %>
 </div>
 
@@ -375,8 +385,8 @@ End If
                     <h2>Login</h2>
                     <div class="inputboxlogin">
                         <ion-icon name="mail-outline"></ion-icon>
-                        <input type="text" name="username" required id="username">
-                        <label for="username">Email</label>
+                        <input type="text" name="email_kh" required id="email_kh">
+                        <label for="email_kh">Email</label>
                     </div>
                     <div class="inputboxlogin">
                         <ion-icon name="lock-closed-outline"></ion-icon>

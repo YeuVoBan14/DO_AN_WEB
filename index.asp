@@ -497,6 +497,11 @@ set rs = connDB.execute(sqlString)
         background: none;
         border: none;
       }
+      .productaction li button a{
+        background: none;
+        border: none;
+        color: black;
+      }
       .productaction li button i{
         font-size: 16px;
       }
@@ -859,6 +864,14 @@ set rs = connDB.execute(sqlString)
         text-transform: capitalize;
         cursor: pointer;
       }
+      #modal-body ul li button a{
+        background: none;
+        transition: 0.2s ease-in-out;
+      }
+      #modal-body ul li button a:hover{
+        color: white;
+        font-size: 14px;
+      }
     </style>
 </head>
 <body>
@@ -881,7 +894,7 @@ set rs = connDB.execute(sqlString)
       </label>
         <ul>
           <li><a href="#home" target="_self">Home</a></li>
-          <li><a href="#">About</a></li>
+          <li><a href="shoppingcart.asp">My Cart</a></li>
           <li><a href="#product" target="_self">Products</a></li>
           <li><a href="#contact" target="_self">Contact</a></li>
           <li><%
@@ -972,7 +985,7 @@ set rs = connDB.execute(sqlString)
                 <span>View details</span>
               </li> 
               <li>
-                <button><i class="fa-solid fa-cart-shopping"></i></button>
+                <button><a href="addCart.asp?ma_sp=<%= rs("ma_sp")%>"><i class="fa-solid fa-cart-shopping"></i></a></button>
                 <span>Add to cart</span>
               </li> 
             </ul>
@@ -1010,7 +1023,7 @@ set rs = connDB.execute(sqlString)
                 <p><%= rs("soluong_ton") %></p>
               </li>
               <li>
-                <button>add to cart</button>
+                <button><a href="addCart.asp?ma_sp=<%= rs("ma_sp")%>">add to cart</a></button>
               </li>
             </ul>
           </div>

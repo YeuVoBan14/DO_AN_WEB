@@ -72,7 +72,6 @@
         end if
     End If    
 %>
-<div class="error">
 <%
 Dim email_kh, password
 email_kh = Request.Form("email_kh")
@@ -109,7 +108,6 @@ Else
     Session("Error")="Please input email and password."
 End if
 %>
-</div>
 
 
 

@@ -64,6 +64,15 @@ If (NOT IsEmpty(Session("mycarts"))) Then
       body{
         background: #ACC8E5;
       }
+      #form1{
+        appearance: textfield;
+      }
+      #form1::-webkit-inner-spin-button,
+      #form1::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+      }
     </style>
 </head>
 <body>
@@ -104,12 +113,12 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                         <i class="fas fa-minus"></i>
                       </button>
 
-                      <input id="form1" min="0" name="quantity" value="<%
+                      <input id="form1" min="0" max=<%= rs("soluong_ton") %> name="quantity" value="<%
                                     Dim id
                                     id  = CStr(rs("ma_sp"))
                                     Response.Write(mycarts.Item(id))                                     
                                     %>" type="number"
-                        class="form-control form-control-sm" />
+                        class="form-control form-control-sm"  />
 
                       <button class="btn btn-link px-2"
                         onclick="this.parentNode.querySelector('input[type=number]').stepUp()">

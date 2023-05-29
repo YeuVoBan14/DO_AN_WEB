@@ -55,7 +55,7 @@
             Result.Close()
             connDB.Close()
 
-           Response.redirect("index.asp")            
+           Response.redirect("index.asp#product")            
     End if
     'Dim mycarts
    'lay ve danh sach ID trong gio hang

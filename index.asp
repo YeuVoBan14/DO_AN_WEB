@@ -770,12 +770,12 @@ set rs = connDB.execute(sqlString)
       }
       /* style for modal */
 
-      *{
+      /* *{
         box-sizing: border-box;
       }
       body{
         min-height: 150vh;
-      }
+      } */
       .modal-container{
         width: 100%;
         height: 150vh;
@@ -969,6 +969,7 @@ set rs = connDB.execute(sqlString)
     <div class="title" id="product">
       <h1>Product</h1>
     </div>
+    
     <div class="productmain">
       <%
       ' code to display the product cards for the current page
@@ -1043,7 +1044,7 @@ set rs = connDB.execute(sqlString)
     <% if (pages>1) then 
         for i= 1 to pages
     %>
-    <li class="page_item <%=checkPage(Clng(i)=Clng(page),"active")%>"><a class="page_link" href="index.asp?page=<%=i%>"><%=i%></a></li>
+    <li class="page_item <%=checkPage(Clng(i)=Clng(page),"active")%>"><a class="page_link" href="index.asp?page=<%=i%>#product"><%=i%></a></li>
     <%
         next
         end if

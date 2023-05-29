@@ -1,4 +1,3 @@
-
 <!-- #include file="connect.asp" -->
 <%
     If (Request.ServerVariables("REQUEST_METHOD") = "post") THEN        
@@ -73,34 +72,42 @@
         end if
     End If    
 %>
-<div class="error">
 <%
-If Request.Form("submit") <> "" Then
-    Dim username
-    username = Request.Form("username")
-    Dim password
-    password = Request.Form("password")
-    
-    Dim conn
-    Set conn = Server.CreateObject("ADODB.Connection")
-    conn.Open "Provider=SQLOLEDB;Data Source=YEUVOBAN\SQLEXPRESS;Initial Catalog=DO_AN_WEB;User ID=sa;Password=1234;"
-    Dim rs
-    Set rs = Server.CreateObject("ADODB.Recordset")
-    rs.Open "SELECT * FROM KHACHHANG WHERE email_kh = '" & username & "' AND mk_kh = '" & password & "'", conn
-    If rs.EOF Then
-        'Response.Write(Session("Error"))
-        Response.Write("<p>Invalid input. Try again</p>")
+Dim email_kh, password
+email_kh = Request.Form("email_kh")
+password = Request.Form("password")
+If (NOT isnull(email_kh) AND NOT isnull(password) AND TRIM(email_kh)<>"" AND TRIM(password)<>"" ) Then
+    ' true
+    Dim sql
+    sql = "select * from KHACHHANG where email_kh= ? and mk_kh= ?"
+    Dim cmdPrep
+    set cmdPrep = Server.CreateObject("ADODB.Command")
+    connDB.Open()
+    cmdPrep.ActiveConnection = connDB
+    cmdPrep.CommandType=1
+    cmdPrep.Prepared=true
+    cmdPrep.CommandText = sql
+    cmdPrep.Parameters(0)=email_kh
+    cmdPrep.Parameters(1)=password
+    Dim result
+    set result = cmdPrep.execute()
+    'kiem tra ket qua result o day
+    If not result.EOF Then
+        ' dang nhap thanh cong
+        Session("email_kh")=result("email_kh")
+        Session("Success")="Login Successfully"
+        Response.redirect("index.asp")
     Else
-        Session("authenticated") = True
-        Response.Redirect "index.asp"
-    End If
-    rs.Close
-    Set rs = Nothing
-    conn.Close
-    Set conn = Nothing
-End If
+        ' dang nhap ko thanh cong
+        Session("Error") = "Wrong email or password"
+    End if
+    result.Close()
+    connDB.Close()
+Else
+    ' false
+    Session("Error")="Please input email and password."
+End if
 %>
-</div>
 
 
 
@@ -303,7 +310,8 @@ End If
             display: inline-block;
             }
         .inputbox:nth-child(3){
-            width: 385px;
+            margin-left: 10px;
+            width: 375px;
             display: inline-block;
             }
         .inputbox span{
@@ -376,8 +384,8 @@ End If
                     <h2>Login</h2>
                     <div class="inputboxlogin">
                         <ion-icon name="mail-outline"></ion-icon>
-                        <input type="text" name="username" required id="username">
-                        <label for="username">Email</label>
+                        <input type="text" name="email_kh" required id="email_kh">
+                        <label for="email_kh">Email</label>
                     </div>
                     <div class="inputboxlogin">
                         <ion-icon name="lock-closed-outline"></ion-icon>
@@ -400,32 +408,39 @@ End If
           <div id="modal-body">
             <form method="post">
               <div class="inputbox">
+              <span>Name</span>
                 <input type="text" id="ten_kh" name="ten_kh" value="<%=ten_kh%>" required>
-                <span>Name</span>
+                
               </div>
               <div class="inputbox">
-                <input type="number" id="tuoi_kh" name="tuoi_kh" value="<%=tuoi_kh%>" required>
                 <span>Age</span>
+                <input type="number" id="tuoi_kh" name="tuoi_kh" value="<%=tuoi_kh%>" required>
+                
               </div>
               <div class="inputbox">
-                <input type="text" id="sdt_kh" name="sdt_kh" value="<%=sdt_kh%>" required>
                 <span>Phone</span>
+                <input type="text" id="sdt_kh" name="sdt_kh" value="<%=sdt_kh%>" required>
+                
               </div>
               <div class="inputbox">
-                <input type="text" id="gioi_tinh" name="gioi_tinh" value="<%=gioi_tinh%>" required>
                 <span>Gender</span>
+                <input type="text" id="gioi_tinh" name="gioi_tinh" value="<%=gioi_tinh%>" required>
+                
               </div>
               <div class="inputbox">
-                <input type="email" id="email_kh" name="email_kh" value="<%=email_kh%>" required>
                 <span>Email</span>
+                <input type="email" id="email_kh" name="email_kh" value="<%=email_kh%>" required>
+                
               </div>
               <div class="inputbox">
-                <input type="text" id="mk_kh" name="mk_kh" value="<%=mk_kh%>" required>
                 <span>Password</span>
+                <input type="text" id="mk_kh" name="mk_kh" value="<%=mk_kh%>" required>
+                
               </div>
               <div class="inputbox">
-                <input type="text" class="form-control" id="diachi_kh" name="diachi_kh" value="<%=diachi_kh%>" required>
                 <span>Address</span>
+                <input type="text" class="form-control" id="diachi_kh" name="diachi_kh" value="<%=diachi_kh%>" required>
+                
               </div>
               <button type="submit" class="btn-submit">
               <%

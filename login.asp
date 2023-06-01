@@ -126,16 +126,12 @@ End if
             padding: 0px;
             font-family: 'poppins',sans-serif;
         }
-        .error{
-            position: fixed;
-            text-align: center;
-            top: 85px;
-            line-height: 45px;
-            font-family: 'Courier New', Courier, monospace ;
-            width: 100%;
-            font-size: 20px;
-            font-weight: bold;
-            color: #ff0000;
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+            transition: background-color 5000s ease-in-out 0s;
+            -webkit-text-fill-color: #fff !important;
         }
         section{
             display: flex;
@@ -317,6 +313,7 @@ End if
         .inputbox span{
             position: absolute;
             left: 0;
+            top:0;
             padding: 10px;
             pointer-events: none;
             font-size: 1em;
@@ -408,39 +405,39 @@ End if
           <div id="modal-body">
             <form method="post">
               <div class="inputbox">
-              <span>Name</span>
+              
                 <input type="text" id="ten_kh" name="ten_kh" value="<%=ten_kh%>" required>
-                
+                <span>Name</span>
               </div>
               <div class="inputbox">
-                <span>Age</span>
+                
                 <input type="number" id="tuoi_kh" name="tuoi_kh" value="<%=tuoi_kh%>" required>
-                
+                <span>Age</span>
               </div>
               <div class="inputbox">
-                <span>Phone</span>
+                
                 <input type="text" id="sdt_kh" name="sdt_kh" value="<%=sdt_kh%>" required>
-                
+                <span>Phone</span>
               </div>
               <div class="inputbox">
-                <span>Gender</span>
+                
                 <input type="text" id="gioi_tinh" name="gioi_tinh" value="<%=gioi_tinh%>" required>
-                
+                <span>Gender</span>
               </div>
               <div class="inputbox">
-                <span>Email</span>
+                
                 <input type="email" id="email_kh" name="email_kh" value="<%=email_kh%>" required>
-                
+                <span>Email</span>
               </div>
               <div class="inputbox">
-                <span>Password</span>
+
                 <input type="text" id="mk_kh" name="mk_kh" value="<%=mk_kh%>" required>
-                
+                <span>Password</span>
               </div>
               <div class="inputbox">
-                <span>Address</span>
+
                 <input type="text" class="form-control" id="diachi_kh" name="diachi_kh" value="<%=diachi_kh%>" required>
-                
+                <span>Address</span>
               </div>
               <button type="submit" class="btn-submit">
               <%
@@ -453,6 +450,7 @@ End if
           </div>
         </div>
       </div>
+    </div> 
     
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

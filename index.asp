@@ -71,7 +71,8 @@ set rs = connDB.execute(sqlString)
       body{
         align-items: center;
         justify-content: center;
-        background: #ACC8E5;
+        /* background: #ACC8E5; */
+        background: linear-gradient(120deg,#E5CDC3,#6047E0);
         min-height: 150vh;
       }
       .title{

@@ -11,7 +11,11 @@ VALUES ('Master collection', 'Longines', 'Longines', 1800000, 3600000, 'silver',
 INSERT INTO SANPHAM (ten_sp, loai, ten_nhacc, gia_nhap, gia_ban, mau_sp, soluong_ton, hinh_anh_sp)
 VALUES ('Geneve', 'Patek Philipe', 'Patek Philipe', 1500000, 6000000, 'blue', 1,'watch_pic\product5.png')
   
-
+USE DO_AN_WEB;
+GO
 DELETE FROM dbo.SANPHAM;
+
+USE DO_AN_WEB;
+GO
 DELETE FROM dbo.KHACHHANG;
 

@@ -1,6 +1,8 @@
 <!-- #include file="../connect.asp" -->
 <%
-
+  If (isnull(Session("email_ql")) OR TRIM(Session("email_ql")) = "") Then
+        Response.redirect("loginadmin.asp")
+  End If
     function Ceil(Number)
         Ceil = Int(Number)
         if Ceil<>Number Then
@@ -59,6 +61,13 @@
   <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <link rel="preconnect" href="https://fonts.bunny.net">
+  <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+  <style>
+    *{
+      font-family:Figtree, sans-serif;
+    }
+  </style>
 </head>
 <!--
 `body` tag options:
@@ -183,8 +192,15 @@
                   <p>Bill</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="#" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Suppiler</p>
+                </a>
+              </li>
             </ul>
           </li>
+          <li style="text-align: center; margin-top: 50px;"><button class="btn btn-primary" ><a href="logoutadmin.asp" >Log out</a></button></li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->

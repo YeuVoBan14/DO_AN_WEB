@@ -119,12 +119,14 @@ End if
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <title>login</title>
     <style>
         *{
             margin: 0px;
             padding: 0px;
-            font-family: 'poppins',sans-serif;
+            font-family:Figtree, sans-serif;
         }
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -392,7 +394,7 @@ End if
                     <button type="submit" name="submit" value="Login">Log in</button>
                 </form>
                 <button id="btn-modal-open">Sign Up</button>
-                <button onclick="handleButtonClick()">Click Me</button>
+                <button><a href="admin/loginadmin.asp" style="text-decoration: none; color: #333;">Admin</a></button>
             </div>
         </div>
     </section>

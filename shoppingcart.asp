@@ -46,6 +46,80 @@ If (NOT IsEmpty(Session("mycarts"))) Then
     End If
   End Sub
 %>
+
+<%
+    If (Request.ServerVariables("REQUEST_METHOD") = "GET") THEN        
+        macthoadon_ban = Request.QueryString("macthoadon_ban")
+        If (isnull(macthoadon_ban) OR trim(macthoadon_ban) = "") then 
+            macthoadon_ban=0 
+        End if
+        If (cint(macthoadon_ban)<>0) Then
+            Set cmdPrep = Server.CreateObject("ADODB.Command")
+            connDB.Open()
+            cmdPrep.ActiveConnection = connDB
+            cmdPrep.CommandType = 1
+            cmdPrep.CommandText = "SELECT * FROM CTHOADONBAN WHERE macthoadon_ban=?"
+            
+            cmdPrep.Parameters(0)=macthoadon_ban
+            Set Result = cmdPrep.execute 
+
+            If not Result.EOF then
+                ten_sp = Result("ten_sp")
+                loai = Result("loai")
+                
+                
+            End If
+
+   
+            Result.Close()
+        End If
+    Else
+        ma_sp = Request.QueryString("ma_sp")
+        ten_sp = Request.form("ten_sp")
+        loai = Request.form("loai")
+        ten_nhacc = Request.form("ten_nhacc")
+        gia_nhap = Request.form("gia_nhap")
+        gia_ban = Request.form("gia_ban")
+        mau_sp = Request.form("mau_sp")
+        soluong_ton = Request.form("soluong_ton")
+        hinh_anh_sp = Request.form("hinh_anh_sp")
+        
+
+        if (isnull (ma_sp) OR trim(ma_sp) = "") then ma_sp=0 end if
+
+        if (cint(ma_sp)=0) then
+            if (NOT isnull(ten_sp) and ten_sp <>"" and NOT isnull(loai) and loai <>"" and NOT isnull(ten_nhacc) and ten_nhacc <>"" and NOT isnull(gia_nhap) and gia_nhap <>"" and NOT isnull(gia_ban) and gia_ban <>"" and NOT isnull(mau_sp) and mau_sp <>"" and NOT isnull(soluong_ton) and soluong_ton <>"" and NOT isnull(hinh_anh_sp) and hinh_anh_sp <>"") then
+                Set cmdPrep = Server.CreateObject("ADODB.Command")
+                connDB.Open()                
+                cmdPrep.ActiveConnection = connDB
+                cmdPrep.CommandType = 1
+                cmdPrep.Prepared = True
+                cmdPrep.CommandText = "INSERT INTO SANPHAM(ten_sp,loai,ten_nhacc,gia_nhap,gia_ban,mau_sp,soluong_ton,hinh_anh_sp) VALUES(?,?,?,?,?,?,?,?)"
+                cmdPrep.parameters.Append cmdPrep.createParameter("ten_sp",202,1,255,ten_sp)
+                cmdPrep.parameters.Append cmdPrep.createParameter("loai",202,1,255,loai)
+                cmdPrep.parameters.Append cmdPrep.createParameter("ten_nhacc",202,1,255,ten_nhacc)
+                cmdPrep.parameters.Append cmdPrep.createParameter("gia_nhap",202,1,255,gia_nhap)
+                cmdPrep.parameters.Append cmdPrep.createParameter("gia_ban",202,1,255,gia_ban)
+                cmdPrep.parameters.Append cmdPrep.createParameter("mau_sp",202,1,255,mau_sp)
+                cmdPrep.parameters.Append cmdPrep.createParameter("soluong_ton",202,1,255,soluong_ton)
+                cmdPrep.parameters.Append cmdPrep.createParameter("hinh_anh_sp",202,1,255,hinh_anh_sp)
+
+                cmdPrep.execute               
+                
+                If Err.Number = 0 Then 
+                
+                    Session("Success") = "New employee added!"                    
+                    Response.redirect("product.asp")  
+                Else  
+                    handleError(Err.Description)
+                End If
+                On Error GoTo 0
+            else
+                Session("Error") = "You have to input enough info"                
+            end if
+        end if
+    End If    
+%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,9 +131,11 @@ If (NOT IsEmpty(Session("mycarts"))) Then
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <style>
       *{
-        font-family: 'Poppins', sans-serif;
+        font-family:Figtree, sans-serif;
       }
       body{
         background: #ACC8E5;
@@ -105,7 +181,7 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                     </div>
                     <div class="col-md-3 col-lg-3 col-xl-3">
                       <h6 class="text-muted"><%= rs("ten_sp")%></h6>
-                      <h6 class="text-black mb-0"><%= rs("mau_sp")%></h6>
+                      <h6 class="text-black mb-0" name="mau"><%= rs("mau_sp")%></h6>
                     </div>
                     <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
                       <button class="btn btn-link px-2"
@@ -133,6 +209,7 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                       <a href="removecart.asp?id=<%= rs("ma_sp")%>" class="text-muted"><i class="fas fa-times"></i></a>
                     </div>
                   </div>
+                  
 
                   <hr class="my-4">
 <%
@@ -143,11 +220,15 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                 End If
                 %> 
                 
-                  <div class="row pt-2">
+                  <div class="row pt-2" style="width: 40%;">
                     <h6 class="mb-0 col-lg-10 pt-3"><a href="index.asp" class="text-body"><i
                           class="fas fa-long-arrow-alt-left me-2"></i>Back to shop</a></h6>
                           <!-- <input type="submit" name="update" value="Update" class="btn btn-warning btn-block btn-lg text-white col-lg-2 <%= statusButtons %>"
                     data-mdb-ripple-color="dark"/> -->
+                  </div>
+                  <div class="row" style="width: 50%; float: right; margin-bottom: 10px;">
+                    <button type="submit" class="btn btn-success btn-lg"
+                      data-mdb-ripple-color="dark">Purchase</button>
                   </div>
                 </form>
                 </div>
@@ -188,10 +269,7 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                     <h5 class="text-uppercase">Total price</h5>
                     <h5>$ <%= subtotal %></h5>
                   </div>
-                  <div class="row">
-                    <button type="button" class="btn btn-success btn-lg"
-                      data-mdb-ripple-color="dark">Purchase</button>
-                  </div>
+                  
                 </div>
               </div>
             </div>

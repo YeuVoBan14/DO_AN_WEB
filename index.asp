@@ -59,13 +59,16 @@ set rs = connDB.execute(sqlString)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <title>Index</title>
     <style>
       *{
           padding: 0;
           margin: 0;
           box-sizing: border-box;
-          font-family: 'Poppins', sans-serif;
+/*          font-family: 'Poppins', sans-serif;*/
+          font-family:Figtree, sans-serif;
           text-decoration: none;
       }
       body{

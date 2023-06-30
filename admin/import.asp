@@ -27,7 +27,7 @@
 
     offset = (Clng(page) * Clng(limit)) - Clng(limit)
 
-    strSQL = "SELECT COUNT(ma_kh) AS count FROM KHACHHANG"
+    strSQL = "SELECT COUNT(mahoadon_nhap) AS count FROM HOADONNHAP"
     connDB.Open()
     Set CountResult = connDB.execute(strSQL)
 
@@ -51,7 +51,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <title>Customer</title>
+  <title>Import</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -175,7 +175,6 @@
         </div>
       </div>
 
-
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
@@ -197,8 +196,8 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="customer.asp" class="nav-link active">
-                  <i class="fa-regular fa-circle-dot nav-icon"></i>
+                <a href="customer.asp" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
                   <p>Customer</p>
                 </a>
               </li>
@@ -212,7 +211,7 @@
           </li>
           <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
-              <i class="fa-solid fa-file-invoice nav-icon"></i>
+              <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Bill
                 <i class="right fas fa-angle-left"></i>
@@ -220,8 +219,8 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="import.asp" class="nav-link ">
-                  <i class="far fa-circle nav-icon"></i>
+                <a href="inport.asp" class="nav-link active">
+                  <i class="fa-regular fa-circle-dot nav-icon"></i>
                   <p>Import</p>
                 </a>
               </li>
@@ -248,11 +247,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Customer</h1>
+            <h1 class="m-0">Import</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <button class="btn btn-primary" ><a href="add_edit_customer.asp"><i class="fa-solid fa-plus" style="color: white;"></i></a></button>
+              <button class="btn btn-primary" ><a href="addimport.asp"><i class="fa-solid fa-plus" style="color: white;"></i></a></button>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -278,15 +277,10 @@
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th><a href="?sort=name" style="text-decoration: none;">Name</a></th>
-                    <th>Age</th>
-                    <th>Gender</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Password</th>
-                    <th>Address</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
+                    <th>Total</th>
+                    <th><a href="?sort=createddate" style="text-decoration: none;">Created Date</a></th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -294,7 +288,7 @@
                         Dim searchKeyword, strSQL, sortParameter, sortState
                         sortState = "ASC"
                         sortParameter = Request.QueryString("sort")
-                        If Not IsNull(sortParameter) And LCase(sortParameter) = "name" Then
+                        If Not IsNull(sortParameter) And LCase(sortParameter) = "createddate" Then
                             If Session("SortState") = "ASC" Then
                                 sortState = "DESC"
                             Else
@@ -305,11 +299,11 @@
                             sortState = "ASC"
                             Session.Contents.Remove("SortState")
                         End If
-                        strSQL = "SELECT * FROM KHACHHANG ORDER BY ma_kh OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        strSQL = "SELECT * FROM HOADONNHAP ORDER BY mahoadon_nhap OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         If sortState = "ASC" Then
-                            strSQL = "SELECT * FROM KHACHHANG ORDER BY ten_kh ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                            strSQL = "SELECT * FROM HOADONNHAP ORDER BY ngay_nhap ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         ElseIf sortState = "DESC" Then
-                            strSQL = "SELECT * FROM KHACHHANG ORDER BY ten_kh DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                            strSQL = "SELECT * FROM HOADONNHAP ORDER BY ngay_nhap DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         End If
 
                         ' tim kiem
@@ -320,7 +314,7 @@
                         cmdPrep.CommandType = 1
                         cmdPrep.Prepared = True                                            
                         if Not isnull(searchKeyword) and searchKeyword <>"" then
-                            strSQL = "SELECT * FROM KHACHHANG WHERE ten_kh LIKE '%" & searchKeyword & "%' OR sdt_kh LIKE '%" & searchKeyword & "%' ORDER BY ma_kh OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                            strSQL = "SELECT * FROM HOADONNHAP WHERE mahoadon_nhap LIKE '%" & searchKeyword &  "%' ORDER BY mahoadon_nhap OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         End If
                         cmdPrep.CommandText = strSQL
                         cmdPrep.parameters.Append cmdPrep.createParameter("offset", 3, 1, , offset)
@@ -331,20 +325,13 @@
                         Do While Not Result.EOF
                     %>
                   <tr>
-                    <td><%=Result("ma_kh")%></td>
-                    <td><%=Result("ten_kh")%></td>
-                    <td><%=Result("tuoi_kh")%></td>
-                    <td><%=Result("gioi_tinh")%></td>
-                    <td><%=Result("sdt_kh")%></td>
-                    <td><%=Result("email_kh")%></td>
-                    <td><%=Result("password_kh")%></td>
-                    <td><%=Result("diachi_kh")%></td>
+                    <td><%=Result("mahoadon_nhap")%></td>
+                    <td><%=Result("tongtien_nhap")%></td>
+                    <td><%=Result("ngay_nhap")%></td>
+                    <td><%=Result("trang_thai")%></td>
                     <td>
-                            <a href="add_edit_customer.asp?ma_kh=<%=Result("ma_kh")%>" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a>
-                        </td>
-                        <td>
-                            <a href="deletecustomer.asp?ma_kh=<%=Result("ma_kh")%>" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
+                        <a href="add_edit_supplier.asp?mahoadon_nhap=<%=Result("mahoadon_nhap")%>" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a>
+                    </td>
                   </tr> 
                   <%
                     Result.MoveNext
@@ -360,17 +347,17 @@
             If pages > 1 Then
                 If Clng(page) >= 2 Then
         %>
-                    <li class="page-item"><a class="page-link" href="customer.asp?page=<%=Clng(page)-1%>"><i class="fa-solid fa-backward"></i></a></li>
+                    <li class="page-item"><a class="page-link" href="import.asp?page=<%=Clng(page)-1%>"><i class="fa-solid fa-backward"></i></a></li>
         <%
                 End If
                 For i = 1 To range
         %>
-                    <li class="page-item <%=checkPage(Clng(i) = Clng(page), "active")%>"><a class="page-link" href="customer.asp?page=<%=i%>"><%=i%></a></li>
+                    <li class="page-item <%=checkPage(Clng(i) = Clng(page), "active")%>"><a class="page-link" href="import.asp?page=<%=i%>"><%=i%></a></li>
         <%
                 Next
                 If Clng(page) < pages Then
         %>
-                    <li class="page-item"><a class="page-link" href="customer.asp?page=<%=Clng(page)+1%>"><i class="fa-solid fa-forward"></i></a></li>
+                    <li class="page-item"><a class="page-link" href="import.asp?page=<%=Clng(page)+1%>"><i class="fa-solid fa-forward"></i></a></li>
         <%
                 End If
             End If
@@ -425,11 +412,11 @@
   }, 2000);
 </script>
 <script>
-    const sortButton = document.getElementById('sort-name');
+    const sortButton = document.getElementById('sort-createddate');
     
     sortButton.addEventListener('click', () => {
     const currentUrl = new URL(window.location.href);
-    currentUrl.searchParams.set('sort', 'name');
+    currentUrl.searchParams.set('sort', 'createddate');
     const newUrl = currentUrl.href;
 
     // Chuyển hướng đến URL mới

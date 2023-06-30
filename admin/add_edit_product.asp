@@ -45,28 +45,27 @@
         if (isnull (ma_sp) OR trim(ma_sp) = "") then ma_sp=0 end if
 
         if (cint(ma_sp)=0) then
-            if (NOT isnull(ten_sp) and ten_sp <>"" and NOT isnull(loai) and loai <>"" and NOT isnull(ten_nhacc) and ten_nhacc <>"" and NOT isnull(gia_nhap) and gia_nhap <>"" and NOT isnull(gia_ban) and gia_ban <>"" and NOT isnull(mau_sp) and mau_sp <>"" and NOT isnull(soluong_ton) and soluong_ton <>"" and NOT isnull(hinh_anh_sp) and hinh_anh_sp <>"") then
+            if (NOT isnull(ten_sp) and ten_sp <>"" and NOT isnull(loai) and loai <>"" and NOT isnull(ten_nhacc) and ten_nhacc <>"" and NOT isnull(gia_nhap) and gia_nhap <>"" and NOT isnull(gia_ban) and gia_ban <>"" and NOT isnull(mau_sp) and mau_sp <>"" and NOT isnull(hinh_anh_sp) and hinh_anh_sp <>"") then
                 Set cmdPrep = Server.CreateObject("ADODB.Command")
                 connDB.Open()                
                 cmdPrep.ActiveConnection = connDB
                 cmdPrep.CommandType = 1
                 cmdPrep.Prepared = True
-                cmdPrep.CommandText = "INSERT INTO SANPHAM(ten_sp,loai,ten_nhacc,gia_nhap,gia_ban,mau_sp,soluong_ton,hinh_anh_sp) VALUES(?,?,?,?,?,?,?,?)"
+                cmdPrep.CommandText = "INSERT INTO SANPHAM(ten_sp,loai,ten_nhacc,gia_nhap,gia_ban,mau_sp,hinh_anh_sp) VALUES(?,?,?,?,?,?,?)"
                 cmdPrep.parameters.Append cmdPrep.createParameter("ten_sp",202,1,255,ten_sp)
                 cmdPrep.parameters.Append cmdPrep.createParameter("loai",202,1,255,loai)
                 cmdPrep.parameters.Append cmdPrep.createParameter("ten_nhacc",202,1,255,ten_nhacc)
                 cmdPrep.parameters.Append cmdPrep.createParameter("gia_nhap",202,1,255,gia_nhap)
                 cmdPrep.parameters.Append cmdPrep.createParameter("gia_ban",202,1,255,gia_ban)
                 cmdPrep.parameters.Append cmdPrep.createParameter("mau_sp",202,1,255,mau_sp)
-                cmdPrep.parameters.Append cmdPrep.createParameter("soluong_ton",202,1,255,soluong_ton)
                 cmdPrep.parameters.Append cmdPrep.createParameter("hinh_anh_sp",202,1,255,hinh_anh_sp)
 
                 cmdPrep.execute               
                 
                 If Err.Number = 0 Then 
                 
-                    Session("Success") = "New employee added!"                    
-                    Response.redirect("add_edit_product.asp")  
+                    Session("Success") = "New product added!"                    
+                    Response.redirect("product.asp")  
                 Else  
                     handleError(Err.Description)
                 End If
@@ -95,7 +94,7 @@
                 cmdPrep.execute
                 If Err.Number=0 Then
                     Session("Success") = "The employee was edited!"
-                    Response.redirect("add_edit_product.asp")
+                    Response.redirect("product.asp")
                 Else
                     handleError(Err.Description)
                 End If
@@ -111,152 +110,8 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
-        <style>
-            *{
-            margin: 0px;
-            padding: 0px;
-            font-family: 'poppins',sans-serif;
-            }
-            #gia_ban::-webkit-inner-spin-button,
-            #gia_ban::-webkit-outer-spin-button,
-            #gia_nhap::-webkit-inner-spin-button,
-            #gia_nhap::-webkit-outer-spin-button,
-            #soluong_ton::-webkit-inner-spin-button,
-            #soluong_ton::-webkit-outer-spin-button {
-                -webkit-appearance: none;
-                appearance: none;
-                margin: 0;
-            }
-            input:-webkit-autofill,
-                    input:-webkit-autofill:hover,
-                    input:-webkit-autofill:focus,
-                    input:-webkit-autofill:active {
-                        transition: background-color 5000s ease-in-out 0s;
-                        -webkit-text-fill-color: #fff !important;
-                    }
-            #modal-container{
-            width: 100%;
-            height: 150vh;
-            position: fixed;
-            background: linear-gradient(120deg,#2980b9, #8e44ad);
-            top: 0;
-            left: 0;
-            }
-            .modal{
-            position: relative;
-            background: rgba(29, 43, 58, 0.25);
-            backdrop-filter: blur(15px);
-            max-width: 600px;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 50px;
-            transition: all 0.5s ease-in-out;
-            border: 3px solid #00dfc4;
-            border-radius: 30px;
-            }
-            #modal-container.modal-show .modal{
-            top: 20px;
-            }
-            #modal-header{
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 20px;
-            align-items: center;
-            border-bottom: 1px solid rgba(0, 223, 196, 0.3);
-            }
-            #modal-header h3{
-            margin: 0 auto;
-            color: #fff;
-            width: 100%;
-            margin-left: 25px;
-            font-size: 30px;
-            text-align: center;
-            }
-            #btn-modal-close{
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            color: #00dfc4;
-            width: 30px;
-            margin-top: 0;
-            }
-            #modal-body{
-            padding: 15px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            }
-            .inputbox{
-            position: relative;
-            width: 100%;
-            margin-top: 20px;  
-            }
-            .inputbox input{
-            width: 100%;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            background: #1d2b3a;
-            border-radius: 5px;
-            outline: none;
-            color: #fff;
-            font-size: 1em;
-            transition: 0.5s;
-            }
-            .inputbox:nth-child(2),
-            .inputbox:nth-child(4),
-            .inputbox:nth-child(6)
-            {
-            width: 48%;
-            margin-right: 16px;
-            display: inline-block;
-            }
-            .inputbox:nth-child(3),
-            .inputbox:nth-child(5),
-            .inputbox:nth-child(7)
-            {
-            width: 48%;
-            display: inline-block;
-            }
-            .inputbox span{
-            position: absolute;
-            left: 0;
-            top:0;
-            padding: 10px;
-            pointer-events: none;
-            font-size: 1em;
-            color: rgba(255, 255, 255, 0.25);
-            text-transform: uppercase;
-            transition: 0.5s;
-            }
-            .inputbox input:valid ~ span,
-            .inputbox input:focus ~ span{
-            color: #00dfc4;
-            transform: translateX(10px) translateY(-7px);
-            font-size: 0.65em;
-            padding: 0 10px;
-            background: #1d2b3a;
-            border-left: 1px solid #00dfc4;
-            border-right: 1px solid #00dfc4;
-            letter-spacing: 0.3em;
-            }
-            .inputbox input:valid,
-            .inputbox input:focus{
-            border: 1px solid #00dfc4;
-            }
-            .btn-submit{
-            margin-top: 30px;
-            background: #00dfc4;
-            border: none;
-            outline: none;
-            color: (255, 255, 255, 0.25);
-            width: 80px;
-            height: 40px;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            }
-        </style>
+        <link rel="stylesheet" href="../style/addedit.css">
+        <title>Add/Edit Product</title>
     </head>
     <body>
         
@@ -282,11 +137,6 @@
                 
                 <input type="text" id="loai" name="loai"  required value="<%=loai%>">
                 <span>Brand</span>
-              </div>
-              <div class="inputbox">
-                
-                <input type="number" id="soluong_ton" name="soluong_ton" required value="<%=soluong_ton%>">
-                <span>Quantities</span>
               </div>
               <div class="inputbox">
                 

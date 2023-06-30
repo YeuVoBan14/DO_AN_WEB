@@ -169,7 +169,7 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                   <form action="removecart.asp" method=post>
                   <hr class="my-4">
                   <h5 class="mt-3 text-center text-body-secondary <%= statusViews %>">You have no products added in your shopping cart.</h5>
-<%
+                <%
                 If (totalProduct<>0) Then
                 do while not rs.EOF
                 %>
@@ -212,13 +212,13 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                   
 
                   <hr class="my-4">
-<%
-                rs.MoveNext
-                loop
-                'phuc vu cho viec update subtotal
-                rs.MoveFirst
-                End If
-                %> 
+                    <%
+                    rs.MoveNext
+                    loop
+                    'phuc vu cho viec update subtotal
+                    rs.MoveFirst
+                    End If
+                    %> 
                 
                   <div class="row pt-2" style="width: 40%;">
                     <h6 class="mb-0 col-lg-10 pt-3"><a href="index.asp" class="text-body"><i
@@ -242,26 +242,6 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                     <h5 class="text-uppercase"><%= totalProduct %> <%call defineItems(totalProduct) %></h5>
                     <h5>$ <%= subtotal%></h5>
                   </div>
-
-                  <!-- <h5 class="text-uppercase mb-3">Shipping</h5> -->
-
-                  <!-- <div class="mb-4 pb-2">
-                    <select class="select">
-                      <option value="1">Standard-Delivery- $5</option>
-                      <option value="2">Two</option>
-                      <option value="3">Three</option>
-                      <option value="4">Four</option>
-                    </select>
-                  </div> -->
-
-                  <!-- <h5 class="text-uppercase mb-3">Give code</h5>
-
-                  <div class="mb-5">
-                    <div class="form-outline">
-                      <input type="text" id="form3Examplea2" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Examplea2">Enter your code</label>
-                    </div>
-                  </div> -->
 
                   <hr class="my-4">
 

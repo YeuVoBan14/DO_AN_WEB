@@ -63,9 +63,16 @@
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
   <link rel="preconnect" href="https://fonts.bunny.net">
   <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
     *{
       font-family:Figtree, sans-serif;
+    }
+    #alert_id{
+        font-size: 15px;
+        padding: 10px 15px;
+        margin-bottom: 10px;
+        transition: 1s;
     }
   </style>
 </head>
@@ -92,6 +99,25 @@
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
       <!-- Navbar Search -->
+      <li>
+        <%
+        Dim success
+        success = Session("Success")
+        If Not isnull(success) Then
+        Response.Write("<div id='alert_id' class='badge text-bg-success'>" & success & "</div>")
+        Session.Contents.Remove("Success")
+        End If
+        %>
+
+        <%
+        Dim error
+        error = Session("Error")
+        If Not isnull(error) Then
+        Response.Write("<div id='alert_id' class='badge text-bg-error'>" & error & "</div>")
+        Session.Contents.Remove("Error")
+        End If
+        %>
+      </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="navbar-search" href="#" role="button">
           <i class="fas fa-search"></i>
@@ -99,7 +125,7 @@
         <div class="navbar-search-block">
           <form class="form-inline">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="keyword">
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -133,7 +159,7 @@
     <!-- Brand Logo -->
     <a href="../index.asp" class="brand-link">
       <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Nhóm 10</span>
+      <span class="brand-text font-weight-light">Index</span>
     </a>
 
     <!-- Sidebar -->
@@ -144,21 +170,10 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block"><%=Session("ten_ql")%></a>
         </div>
       </div>
 
-      <!-- SidebarSearch Form -->
-      <!-- <div class="form-inline">
-        <div class="input-group" data-widget="sidebar-search">
-          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-          <div class="input-group-append">
-            <button class="btn btn-sidebar">
-              <i class="fas fa-search fa-fw"></i>
-            </button>
-          </div>
-        </div>
-      </div> -->
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
@@ -176,7 +191,7 @@
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="product.asp" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
+                  <i class="fa-regular fa-circle-dot nav-icon"></i>
                   <p>Product</p>
                 </a>
               </li>
@@ -187,20 +202,36 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link ">
+                <a href="supplier.asp" class="nav-link ">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Bill</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link ">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Suppiler</p>
+                  <p>Supplier</p>
                 </a>
               </li>
             </ul>
           </li>
-          <li style="text-align: center; margin-top: 50px;"><button class="btn btn-primary" ><a href="logoutadmin.asp" >Log out</a></button></li>
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+              <i class="fa-solid fa-file-invoice nav-icon"></i>
+              <p>
+                Bill
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="import.asp" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Import</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="export.asp" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Export</p>
+                </a>
+            </ul>
+          </li>
+          <li style="text-align: center; margin-top: 50px;"><button class="btn btn-primary" ><a href="logoutadmin.asp" style="text-decoration: none;">Log out</a></button></li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -247,7 +278,7 @@
                     <th></th>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Price</th>
+                    <th><a href="?sort=price" style="text-decoration: none;">Price</a></th>
                     <th>Brand</th>
                     <th>Supplier</th>
                     <th>Import Price</th>
@@ -259,16 +290,44 @@
                   </thead>
                   <tbody>
                   <% 
-                    Set cmdPrep = Server.CreateObject("ADODB.Command")
-                    cmdPrep.ActiveConnection = connDB
-                    cmdPrep.CommandType = 1
-                    cmdPrep.Prepared = True
-                    cmdPrep.CommandText = "SELECT * FROM SANPHAM ORDER BY ma_sp OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
-                    cmdPrep.parameters.Append cmdPrep.createParameter("offset", 3, 1, , offset)
-                    cmdPrep.parameters.Append cmdPrep.createParameter("limit", 3, 1, , limit)
-                    
-                    Set Result = cmdPrep.execute
-                    Do While Not Result.EOF
+                    Dim searchKeyword, strSQL, sortParameter, sortState
+                        sortState = "ASC"
+                        sortParameter = Request.QueryString("sort")
+                        If Not IsNull(sortParameter) And LCase(sortParameter) = "price" Then
+                            If Session("SortState") = "ASC" Then
+                                sortState = "DESC"
+                            Else
+                                sortState = "ASC"
+                            End If
+                            Session("SortState") = sortState
+                        Else
+                            sortState = "ASC"
+                            Session.Contents.Remove("SortState")
+                        End If
+                        strSQL = "SELECT * FROM SANPHAM ORDER BY gia_ban OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        If sortState = "ASC" Then
+                            strSQL = "SELECT * FROM SANPHAM ORDER BY gia_ban ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        ElseIf sortState = "DESC" Then
+                            strSQL = "SELECT * FROM SANPHAM ORDER BY gia_ban DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        End If
+
+                        ' tim kiem
+
+                        searchKeyword = Request.QueryString("keyword")
+                        Set cmdPrep = Server.CreateObject("ADODB.Command")
+                        cmdPrep.ActiveConnection = connDB
+                        cmdPrep.CommandType = 1
+                        cmdPrep.Prepared = True                                            
+                        if Not isnull(searchKeyword) and searchKeyword <>"" then
+                            strSQL = "SELECT * FROM SANPHAM WHERE ten_sp LIKE '%" & searchKeyword & "%' OR ten_nhacc LIKE '%" & searchKeyword & "%' ORDER BY ma_sp OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        End If
+                        cmdPrep.CommandText = strSQL
+                        cmdPrep.parameters.Append cmdPrep.createParameter("offset", 3, 1, , offset)
+                        cmdPrep.parameters.Append cmdPrep.createParameter("limit", 3, 1, , limit)
+
+                        
+                        Set Result = cmdPrep.execute
+                        Do While Not Result.EOF
                   %>
                   <tr>
                     <td>
@@ -277,7 +336,7 @@
                     </td>
                     <td><%=Result("ma_sp")%></td>
                     <td><%=Result("ten_sp")%></td>
-                    <td><%=Result("gia_ban")%></td>
+                    <td>$<%=Result("gia_ban")%></td>
                     <td><%=Result("loai")%></td>
                     <td><%=Result("ten_nhacc")%></td>
                     <td><%=Result("gia_nhap")%></td>
@@ -359,5 +418,26 @@
 <script src="dist/js/demo.js"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="dist/js/pages/dashboard3.js"></script>
+<script>
+  var alertElement = document.getElementById("alert_id");
+  setTimeout(function() {
+  alertElement.style.opacity = 0;
+  setTimeout(function() {
+  alertElement.style.display = "none";
+  }, 1000);
+  }, 2000);
+</script>
+<script>
+    const sortButton = document.getElementById('sort-price');
+    
+    sortButton.addEventListener('click', () => {
+    const currentUrl = new URL(window.location.href);
+    currentUrl.searchParams.set('sort', 'price');
+    const newUrl = currentUrl.href;
+
+    // Chuyển hướng đến URL mới
+    window.location.href = newUrl;
+    });
+</script>
 </body>
 </html>

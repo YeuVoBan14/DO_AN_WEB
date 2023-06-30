@@ -46,7 +46,7 @@ create table HOADONBAN(
 	tongtien_ban REAL NOT NULL DEFAULT 0,
 	ma_kh INT NOT NULL,
 	ngay_ban DATETIME NOT NULL,
-	trang_thai bit NOT NULL DEFAULT 0,
+	trang_thai bit NOT NULL DEFAULT 1,
 	PRIMARY KEY (mahoadon_ban),
 	FOREIGN KEY (ma_kh) REFERENCES KHACHHANG(ma_kh),
 );
@@ -139,9 +139,20 @@ BEGIN
         mahoadon_ban IN (SELECT mahoadon_ban FROM deleted);
 END;
 
+CREATE TRIGGER tr_update_soluong_ton
+ON CTHOADONBAN
+AFTER INSERT
+AS
+BEGIN
+    UPDATE SANPHAM
+    SET soluong_ton = soluong_ton - (SELECT soluong_ban FROM inserted)
+    WHERE ma_sp = (SELECT ma_sp FROM inserted)
+END;
+
+
 USE DO_AN_WEB;
 GO
-DELETE FROM SANPHAM WHERE ;
+DELETE FROM HOADONBAN ;
 
 
 

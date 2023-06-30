@@ -43,28 +43,27 @@ create table NHACUNGCAP(
 );
 create table HOADONBAN(
 	mahoadon_ban INT IDENTITY(1,1),
-	tongtien_ban REAL NOT NULL,
-	ngay_ban DATE NOT NULL,
-	trang_thai SMALLINT NOT NULL,
+	tongtien_ban REAL NOT NULL DEFAULT 0,
+	ma_kh INT NOT NULL,
+	ngay_ban DATETIME NOT NULL,
+	trang_thai bit NOT NULL DEFAULT 0,
 	PRIMARY KEY (mahoadon_ban),
+	FOREIGN KEY (ma_kh) REFERENCES KHACHHANG(ma_kh),
 );
 create table CTHOADONBAN(
 	macthoadon_ban INT IDENTITY(1,1),
 	mahoadon_ban INT NOT NULL,
-	ma_kh INT NOT NULL,
 	ma_sp INT NOT NULL,
 	soluong_ban INT NOT NULL,
-	dongia_ban REAL NOT NULL,
 	PRIMARY KEY (macthoadon_ban),
 	FOREIGN KEY (mahoadon_ban) REFERENCES HOADONBAN(mahoadon_ban),
-	FOREIGN KEY (ma_kh) REFERENCES KHACHHANG(ma_kh),
 	FOREIGN KEY (ma_sp) REFERENCES SANPHAM(ma_sp),
 );
 create table HOADONNHAP(
 	mahoadon_nhap INT IDENTITY(1,1),
-	tongtien_nhap REAL NOT NULL,
+	tongtien_nhap REAL NOT NULL DEFAULT 0,
 	ngay_nhap DATETIME NOT NULL,
-	trang_thai bit NOT NULL,
+	trang_thai bit NOT NULL DEFAULT 0,
 	PRIMARY KEY (mahoadon_nhap),
 );
 create table CTHOADONNHAP(
@@ -95,7 +94,8 @@ VALUES
 	('Oyster Perpetual', 'Rolex', 'Rolex', 2000000, 4000000, 'white', 1,'watch_pic\product2.png'),
 	('Satellite wave gps', 'Citizen', 'Citizen', 1500000, 3000000, 'blue', 1,'watch_pic\product3.png'),
 	('Master collection', 'Longines', 'Longines', 1800000, 3600000, 'silver', 1,'watch_pic\product4.png'),
-	('Geneve', 'Patek Philippe', 'Patek Philippe', 1500000, 6000000, 'blue', 1,'watch_pic\product5.png')
+	
+
 
 USE DO_AN_WEB
 GO
@@ -108,7 +108,22 @@ VALUES
 
 USE DO_AN_WEB;
 GO
-DELETE FROM dbo.NHACUNGCAP;
+DELETE FROM HOADONBAN;
 
+CREATE TRIGGER CalculateTotalPrice
+ON CTHOADONBAN
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    UPDATE HOADONBAN
+    SET tongtien_ban = ISNULL((
+            SELECT SUM(S.soluong_ban * SP.gia_ban)
+            FROM CTHOADONBAN AS S
+            INNER JOIN SANPHAM AS SP ON S.ma_sp = SP.ma_sp
+            WHERE S.mahoadon_ban = HOADONBAN.mahoadon_ban
+        ), 0)
+    WHERE mahoadon_ban IN (SELECT mahoadon_ban FROM inserted) OR
+        mahoadon_ban IN (SELECT mahoadon_ban FROM deleted);
+END;
 
 

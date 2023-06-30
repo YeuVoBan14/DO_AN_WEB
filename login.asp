@@ -94,6 +94,7 @@ If (NOT isnull(email_kh) AND NOT isnull(password_kh) AND TRIM(email_kh)<>"" AND 
     'kiem tra ket qua result o day
     If not result.EOF Then
         ' dang nhap thanh cong
+        Session("ma_kh")=Result("ma_kh")
         Session("ten_kh")=Result("ten_kh")
         Session("email_kh")=Result("email_kh")
         Session("Success")="Login Successfully"

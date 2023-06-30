@@ -22,8 +22,7 @@
                 sdt_kh = Result("sdt_kh")
                 email_kh = Result("email_kh")
                 password_kh = Result("password_kh")
-                diachi_kh = Result("diachi_kh")
-                
+                diachi_kh = Result("diachi_kh")   
             End If
 
    

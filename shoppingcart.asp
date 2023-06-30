@@ -47,79 +47,6 @@ If (NOT IsEmpty(Session("mycarts"))) Then
   End Sub
 %>
 
-<%
-    If (Request.ServerVariables("REQUEST_METHOD") = "GET") THEN        
-        macthoadon_ban = Request.QueryString("macthoadon_ban")
-        If (isnull(macthoadon_ban) OR trim(macthoadon_ban) = "") then 
-            macthoadon_ban=0 
-        End if
-        If (cint(macthoadon_ban)<>0) Then
-            Set cmdPrep = Server.CreateObject("ADODB.Command")
-            connDB.Open()
-            cmdPrep.ActiveConnection = connDB
-            cmdPrep.CommandType = 1
-            cmdPrep.CommandText = "SELECT * FROM CTHOADONBAN WHERE macthoadon_ban=?"
-            
-            cmdPrep.Parameters(0)=macthoadon_ban
-            Set Result = cmdPrep.execute 
-
-            If not Result.EOF then
-                ten_sp = Result("ten_sp")
-                loai = Result("loai")
-                
-                
-            End If
-
-   
-            Result.Close()
-        End If
-    Else
-        ma_sp = Request.QueryString("ma_sp")
-        ten_sp = Request.form("ten_sp")
-        loai = Request.form("loai")
-        ten_nhacc = Request.form("ten_nhacc")
-        gia_nhap = Request.form("gia_nhap")
-        gia_ban = Request.form("gia_ban")
-        mau_sp = Request.form("mau_sp")
-        soluong_ton = Request.form("soluong_ton")
-        hinh_anh_sp = Request.form("hinh_anh_sp")
-        
-
-        if (isnull (ma_sp) OR trim(ma_sp) = "") then ma_sp=0 end if
-
-        if (cint(ma_sp)=0) then
-            if (NOT isnull(ten_sp) and ten_sp <>"" and NOT isnull(loai) and loai <>"" and NOT isnull(ten_nhacc) and ten_nhacc <>"" and NOT isnull(gia_nhap) and gia_nhap <>"" and NOT isnull(gia_ban) and gia_ban <>"" and NOT isnull(mau_sp) and mau_sp <>"" and NOT isnull(soluong_ton) and soluong_ton <>"" and NOT isnull(hinh_anh_sp) and hinh_anh_sp <>"") then
-                Set cmdPrep = Server.CreateObject("ADODB.Command")
-                connDB.Open()                
-                cmdPrep.ActiveConnection = connDB
-                cmdPrep.CommandType = 1
-                cmdPrep.Prepared = True
-                cmdPrep.CommandText = "INSERT INTO SANPHAM(ten_sp,loai,ten_nhacc,gia_nhap,gia_ban,mau_sp,soluong_ton,hinh_anh_sp) VALUES(?,?,?,?,?,?,?,?)"
-                cmdPrep.parameters.Append cmdPrep.createParameter("ten_sp",202,1,255,ten_sp)
-                cmdPrep.parameters.Append cmdPrep.createParameter("loai",202,1,255,loai)
-                cmdPrep.parameters.Append cmdPrep.createParameter("ten_nhacc",202,1,255,ten_nhacc)
-                cmdPrep.parameters.Append cmdPrep.createParameter("gia_nhap",202,1,255,gia_nhap)
-                cmdPrep.parameters.Append cmdPrep.createParameter("gia_ban",202,1,255,gia_ban)
-                cmdPrep.parameters.Append cmdPrep.createParameter("mau_sp",202,1,255,mau_sp)
-                cmdPrep.parameters.Append cmdPrep.createParameter("soluong_ton",202,1,255,soluong_ton)
-                cmdPrep.parameters.Append cmdPrep.createParameter("hinh_anh_sp",202,1,255,hinh_anh_sp)
-
-                cmdPrep.execute               
-                
-                If Err.Number = 0 Then 
-                
-                    Session("Success") = "New employee added!"                    
-                    Response.redirect("product.asp")  
-                Else  
-                    handleError(Err.Description)
-                End If
-                On Error GoTo 0
-            else
-                Session("Error") = "You have to input enough info"                
-            end if
-        end if
-    End If    
-%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -166,13 +93,13 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                     <h1 class="fw-bold mb-0 text-black">Shopping Cart</h1>
                     <h6 class="mb-0 text-muted"><%= totalProduct %> <%call defineItems(totalProduct) %></h6>
                   </div>
-                  <form action="removecart.asp" method=post>
+                <form action="purchase.asp" method=post>
                   <hr class="my-4">
                   <h5 class="mt-3 text-center text-body-secondary <%= statusViews %>">You have no products added in your shopping cart.</h5>
-                <%
-                If (totalProduct<>0) Then
-                do while not rs.EOF
-                %>
+                    <%
+                    If (totalProduct<>0) Then
+                    do while not rs.EOF
+                    %>
                   <div class="row mb-4 d-flex justify-content-between align-items-center">
                     <div class="col-md-2 col-lg-2 col-xl-2">
                       <img
@@ -184,25 +111,19 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                       <h6 class="text-black mb-0" name="mau"><%= rs("mau_sp")%></h6>
                     </div>
                     <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                      <button class="btn btn-link px-2"
-                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                        <i class="fas fa-minus"></i>
-                      </button>
+                      
 
-                      <input id="form1" min="0" max=<%= rs("soluong_ton") %> name="quantity" value="<%
-                                    Dim id
-                                    id  = CStr(rs("ma_sp"))
-                                    Response.Write(mycarts.Item(id))                                     
-                                    %>" type="number"
-                        class="form-control form-control-sm"  />
+                      <input id="form<%= rs("ma_sp") %>" min="0" max=<%= rs("soluong_ton") %> name="quantity" value="<%
+                              Dim id
+                              id  = CStr(rs("ma_sp"))
+                              Response.Write(mycarts.Item(id))                                     
+                              %>" type="number"
+                        class="form-control form-control-sm soluong"  onchange="abc()"/>
 
-                      <button class="btn btn-link px-2"
-                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                        <i class="fas fa-plus"></i>
-                      </button>
+      
                     </div>
                     <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                      <h6 class="mb-0">$ <%= rs("gia_ban")%></h6>
+                      <h6 class="mb-0 giaban" >$ <%= rs("gia_ban")%></h6>
                     </div>
                     <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                     
@@ -228,8 +149,8 @@ If (NOT IsEmpty(Session("mycarts"))) Then
                   </div>
                   <div class="row" style="width: 50%; float: right; margin-bottom: 10px;">
                     <button type="submit" class="btn btn-success btn-lg"
-                      data-mdb-ripple-color="dark">Purchase</button>
-                  </div>
+                        data-mdb-ripple-color="dark">Purchase</button>
+                    </div>
                 </form>
                 </div>
               </div>
@@ -240,14 +161,13 @@ If (NOT IsEmpty(Session("mycarts"))) Then
 
                   <div class="d-flex justify-content-between mb-4">
                     <h5 class="text-uppercase"><%= totalProduct %> <%call defineItems(totalProduct) %></h5>
-                    <h5>$ <%= subtotal%></h5>
                   </div>
 
                   <hr class="my-4">
 
                   <div class="d-flex justify-content-between mb-5">
                     <h5 class="text-uppercase">Total price</h5>
-                    <h5>$ <%= subtotal %></h5>
+                    <h5 id="total">$<%= subtotal %></h5>
                   </div>
                   
                 </div>
@@ -259,7 +179,23 @@ If (NOT IsEmpty(Session("mycarts"))) Then
     </div>
   </div>
 </section>
-
+<script>
+function abc() {
+  var inputs = document.getElementsByClassName('soluong');
+  var giabanElements = document.getElementsByClassName('giaban');
+  var total = 0;
+  
+  // Tính tổng giá trị
+  for (var i = 0; i < inputs.length; i++) {
+    var soluong = parseFloat(inputs[i].value);
+    var giaban = parseFloat(giabanElements[i].innerHTML.replace('$ ', ''));
+    total += soluong * giaban;
+  }
+  
+  // Cập nhật giá trị vào phần tử có id="total"
+  document.getElementById('total').innerHTML = '$ ' + total.toFixed(2);
+}
+</script>
 </body>
 
 </html>

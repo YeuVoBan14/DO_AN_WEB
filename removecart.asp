@@ -1,9 +1,6 @@
 <%
         'code for delete a product from my cart
         'lay ve product id
-        If (isnull(Session("email_kh")) OR TRIM(Session("email_kh")) = "") Then
-        Response.redirect("login.asp")
-        End If
         Dim mycarts
         If (NOT IsEmpty(Session("mycarts"))) Then
             Set mycarts = Session("mycarts")
@@ -22,11 +19,7 @@
                 
                 Session("Success") = "The Product has bean removed from your cart."                 
             ElseIf (Request.ServerVariables("REQUEST_METHOD") = "POST") Then
-            'Do something... 
-              'Button update de cap nhat lai so luong va gia
-            'check when button update submit
-            'tinh toan so tien
-            'lay ve quantity
+
                     Dim quantityArray
                     quantityArray = Request.Form("quantity")
                     quantityArrays = Split(quantityArray,",")

@@ -328,9 +328,15 @@
                     <td><%=Result("mahoadon_nhap")%></td>
                     <td><%=Result("tongtien_nhap")%></td>
                     <td><%=Result("ngay_nhap")%></td>
-                    <td><%=Result("trang_thai")%></td>
                     <td>
-                        <a href="add_edit_supplier.asp?mahoadon_nhap=<%=Result("mahoadon_nhap")%>" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <% If Result("trang_thai") = 0 Then %>
+                            deactive
+                        <% Else %>
+                            active
+                        <% End If %>
+                    </td>
+                    <td>
+                        <a href="#" class="btn btn-secondary"><i class="fa-solid fa-pen-to-square"></i></a>
                     </td>
                   </tr> 
                   <%

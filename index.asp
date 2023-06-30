@@ -1,11 +1,5 @@
 <!-- #include file="connect.asp" -->
 <%
-    If (isnull(Session("email_ql")) Or TRIM(Session("email_ql")) = "") Then
-        Response.Redirect("login.asp")
-    End If
-    If (isnull(Session("email_kh")) Or TRIM(Session("email_kh")) = "") Then
-        Response.Redirect("login.asp")
-    End If
     function Ceil(Number)
         Ceil = Int(Number)
         if Ceil<>Number Then
@@ -78,9 +72,9 @@
             <a class="nav-link" href="shoppingcart.asp">My Cart</a>
           </li>
           <%
-            If (NOT isnull(Session("ten_kh"))) AND (TRIM(Session("ten_kh"))<>"") Then
+            If ((NOT isnull(Session("ten_kh"))) AND (TRIM(Session("ten_kh"))<>"") Or (NOT isnull(Session("ten_ql"))) AND (TRIM(Session("ten_ql"))<>"")) Then
           %>
-                <li><span class="nav-item" style=" position: relative;top: 8px;"><a href="" class="nav-link badge text-bg-success" style="font-size: 20px;">Welcome <%=Session("ten_kh")%>!</a></span></li>
+                <li><span class="nav-item" style=" position: relative;top: 8px;"><a href="" class="nav-link badge text-bg-success" style="font-size: 20px;">Welcome <%=Session("ten_kh")%><%=Session("ten_ql")%>!</a></span></li>
                 <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
           <%                        
             Else

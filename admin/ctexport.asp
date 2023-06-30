@@ -1,5 +1,12 @@
 <!-- #include file="../connect.asp" -->
 <%
+    On Error Resume Next
+    mahoadon_ban = Request.QueryString("mahoadon_ban")
+
+    if (isnull(mahoadon_ban) OR trim(mahoadon_ban)="" ) then
+        Response.redirect("export.asp")
+        Response.End
+    end if
   If (isnull(Session("email_ql")) OR TRIM(Session("email_ql")) = "") Then
         Response.redirect("loginadmin.asp")
   End If
@@ -51,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <title>Import</title>
+  <title>Export</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -219,17 +226,18 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="import.asp" class="nav-link active">
-                  <i class="fa-regular fa-circle-dot nav-icon"></i>
+                <a href="import.asp" class="nav-link ">
+                  <i class="far fa-circle nav-icon"></i>
                   <p>Import</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="export.asp" class="nav-link ">
-                  <i class="far fa-circle nav-icon"></i>
+                <a href="export.asp" class="nav-link active">
+                  <i class="fa-regular fa-circle-dot nav-icon"></i>
                   <p>Export</p>
                 </a>
               </li>
+
             </ul>
           </li>
           <li style="text-align: center; margin-top: 50px;"><button class="btn btn-primary" ><a href="logoutadmin.asp" style="text-decoration: none;">Log out</a></button></li>
@@ -247,11 +255,11 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">Import</h1>
+            <h1 class="m-0">Export</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <button class="btn btn-primary" ><a href="addimport.asp"><i class="fa-solid fa-plus" style="color: white;"></i></a></button>
+              <a href="export.asp" class="btn btn-primary">Back to list</a>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -273,90 +281,58 @@
             <div class="card">
               
               <div class="card-body table-responsive p-0">
-                <table class="table table-striped table-valign-middle" style="text-align:center;">
-                <thead>
+                <table class="table table-bordered">
+                    <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Product ID</th>     
                         <th>Quantity</th>
-                        <th>Product ID</th>
-                        <th>Supplier ID</th>
-                        <th><a href="?sort=createddate" style="text-decoration: none;">Created Date</a></th>
-                        <th>Status</th>
-                        <th>Action</th>
                     </tr>
-                </thead>
-                <tbody>
-                    <% 
-                    Dim searchKeyword, strSQL, sortParameter, sortState
-                    sortState = "ASC"
-                    sortParameter = Request.QueryString("sort")
-                    
-                    If Not IsNull(sortParameter) And LCase(sortParameter) = "createddate" Then
-                        If Session("SortState") = "ASC" Then
-                            sortState = "DESC"
-                        Else
-                            sortState = "ASC"
+                    </thead>
+                    <tbody>
+                        <%
+                        Dim strSQL1
+                        strSQL1 = "SELECT * FROM CTHOADONBAN"
+                        If Request.ServerVariables("REQUEST_METHOD") = "GET" Then
+                            mahoadon_ban = Request.QueryString("mahoadon_ban")
+                            If IsNull(mahoadon_ban) Or Trim(mahoadon_ban) = "" Then 
+                                mahoadon_ban = 0 
+                            End If
+                            If CInt(mahoadon_ban) <> 0 Then
+                                strSQL1 = strSQL1 & " WHERE mahoadon_ban = " & mahoadon_ban
+                            End If
                         End If
-                        Session("SortState") = sortState
-                    Else
-                        sortState = "ASC"
-                        Session.Contents.Remove("SortState")
-                    End If
-                    
-                    ' Tạo câu truy vấn SQL
-                    strSQL = "SELECT * FROM HOADONNHAP"
-                    If sortState = "ASC" Then
-                        strSQL = strSQL & " ORDER BY ngay_nhap ASC"
-                    ElseIf sortState = "DESC" Then
-                        strSQL = strSQL & " ORDER BY ngay_nhap DESC"
-                    End If
-                    
-                    ' Tìm kiếm
-                    searchKeyword = Request.QueryString("keyword")
-                    If Not IsNull(searchKeyword) And searchKeyword <> "" Then
-                        strSQL = strSQL & " WHERE mahoadon_nhap LIKE '%" & searchKeyword & "%'"
-                    End If
-                    
-                    ' Thực hiện truy vấn
-                    strSQL = strSQL & " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
-                    Set cmdPrep = Server.CreateObject("ADODB.Command")
-                    cmdPrep.ActiveConnection = connDB
-                    cmdPrep.CommandType = 1
-                    cmdPrep.CommandText = strSQL
-                    cmdPrep.Parameters.Append cmdPrep.CreateParameter("offset", 3, 1, , offset)
-                    cmdPrep.Parameters.Append cmdPrep.CreateParameter("limit", 3, 1, , limit)
-                    
-                    Set Result = cmdPrep.Execute
-                    Do While Not Result.EOF
-                    %>
-                    <tr>
-                        <td><%=Result("mahoadon_nhap")%></td>
-                        <td><%=Result("soluong_nhap")%></td>
-                        <td><%=Result("ma_sp")%></td>
-                        <td><%=Result("ma_nhacc")%></td>
-                        <td><%=Result("ngay_nhap")%></td>
-                        <td>
-                            <% If Result("trang_thai") = 0 Then %>
-                            <p class="badge text-bg-danger">Inactive</p>
-                            <% Else %>
-                            <p class="badge text-bg-success">Active</p>
-                            <% End If %>
-                        </td>
-                        <td>
-                            <% If Result("trang_thai") = 0 Then %>
-                              <a href="active.asp?mahoadon_nhap=<%=Result("mahoadon_nhap")%>" class="btn btn-success">Active</a>
-                            <% Else %>
-                              <a href="active.asp?mahoadon_nhap=<%=Result("mahoadon_nhap")%>" class="btn btn-danger">Inactive</a>
-                            <% End If %>
-                        </td>
-                    </tr>
-                    <%
-                        Result.MoveNext
-                    Loop
-                    %>
-                </tbody>
-            </table>
 
+                        Set cmdPrep = Server.CreateObject("ADODB.Command")
+                        connDB.Open()
+                        cmdPrep.ActiveConnection = connDB
+                        cmdPrep.CommandType = 1
+                        cmdPrep.CommandText = strSQL1
+
+                        Set Result = cmdPrep.Execute
+
+                        Do Until Result.EOF
+                            mahoadon_ban = Result("mahoadon_ban")
+                            macthoadon_ban = Result("macthoadon_ban")
+                            ma_sp = Result("ma_sp")
+                            soluong_ban = Result("soluong_ban")
+                        %>
+                        <tr>
+                        <td><%=Result("macthoadon_ban")%></td>
+                        <td><%=Result("ma_sp")%></td>
+                        <td><%=Result("soluong_ban")%></td>
+                        </tr> 
+                        <%
+                        Result.MoveNext
+                        Loop
+                        %>
+                    </tbody>
+                    <tfoot style="text-align:center;" >
+                      <tr>
+                        <td colspan="3" style="color: #0b5ed7; font-weight: 900;">Export ID:<%=mahoadon_ban%></td>
+                      </tr>
+                    </tfoot>
+                </table>
               </div>
 
             <nav aria-label="Page Navigation">
@@ -365,17 +341,17 @@
             If pages > 1 Then
                 If Clng(page) >= 2 Then
         %>
-                    <li class="page-item"><a class="page-link" href="import.asp?page=<%=Clng(page)-1%>"><i class="fa-solid fa-backward"></i></a></li>
+                    <li class="page-item"><a class="page-link" href="export.asp?page=<%=Clng(page)-1%>"><i class="fa-solid fa-backward"></i></a></li>
         <%
                 End If
                 For i = 1 To range
         %>
-                    <li class="page-item <%=checkPage(Clng(i) = Clng(page), "active")%>"><a class="page-link" href="import.asp?page=<%=i%>"><%=i%></a></li>
+                    <li class="page-item <%=checkPage(Clng(i) = Clng(page), "active")%>"><a class="page-link" href="export.asp?page=<%=i%>"><%=i%></a></li>
         <%
                 Next
                 If Clng(page) < pages Then
         %>
-                    <li class="page-item"><a class="page-link" href="import.asp?page=<%=Clng(page)+1%>"><i class="fa-solid fa-forward"></i></a></li>
+                    <li class="page-item"><a class="page-link" href="export.asp?page=<%=Clng(page)+1%>"><i class="fa-solid fa-forward"></i></a></li>
         <%
                 End If
             End If

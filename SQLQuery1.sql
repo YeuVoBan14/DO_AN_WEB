@@ -61,20 +61,12 @@ create table CTHOADONBAN(
 );
 create table HOADONNHAP(
 	mahoadon_nhap INT IDENTITY(1,1),
-	tongtien_nhap REAL NOT NULL DEFAULT 0,
-	ngay_nhap DATETIME NOT NULL,
-	trang_thai bit NOT NULL DEFAULT 0,
-	PRIMARY KEY (mahoadon_nhap),
-);
-create table CTHOADONNHAP(
-	macthoadon_nhap INT IDENTITY(1,1),
-	mahoadon_nhap INT NOT NULL,
-	ma_nhacc INT NOT NULL,
-	ma_sp INT NOT NULL,
 	soluong_nhap INT NOT NULL,
-	dongia_nhap REAL NOT NULL,
-	PRIMARY KEY (macthoadon_nhap),
-	FOREIGN KEY (mahoadon_nhap) REFERENCES HOADONNHAP(mahoadon_nhap),
+	ma_sp INT NOT NULL,
+	ma_nhacc INT NOT NULL,
+	ngay_nhap DATETIME NOT NULL,
+	trang_thai bit NOT NULL DEFAULT 1,
+	PRIMARY KEY (mahoadon_nhap),
 	FOREIGN KEY (ma_nhacc) REFERENCES NHACUNGCAP(ma_nhacc),
 	FOREIGN KEY (ma_sp) REFERENCES SANPHAM(ma_sp)
 );
@@ -90,11 +82,12 @@ create table CTHOADONNHAP(
 GO
 INSERT INTO SANPHAM (ten_sp, loai, ten_nhacc, gia_nhap, gia_ban, mau_sp, soluong_ton, hinh_anh_sp)
 VALUES 
-	('Oyster Perpetual', 'Rolex', 'Rolex', 1000000, 2000000, 'silver', 1,'watch_pic\product1.png'),
-	('Oyster Perpetual', 'Rolex', 'Rolex', 2000000, 4000000, 'white', 1,'watch_pic\product2.png'),
-	('Satellite wave gps', 'Citizen', 'Citizen', 1500000, 3000000, 'blue', 1,'watch_pic\product3.png'),
-	('Master collection', 'Longines', 'Longines', 1800000, 3600000, 'silver', 1,'watch_pic\product4.png'),
-	
+	('Oyster Perpetual', 'Rolex', 'Rolex', 2000000, 4000000, 'white', 10,'watch_pic\product2.png'),
+	('Satellite wave gps', 'Citizen', 'Citizen', 1500000, 3000000, 'blue', 5,'watch_pic\product3.png'),
+	('Master collection', 'Longines', 'Longines', 1800000, 3600000, 'silver', 9,'watch_pic\product4.png'),
+	('Geneve', 'Patek Philippe', 'Patek Philippe', 1500000, 6000000, 'blue', 8,'watch_pic\product5.png'),
+	('Oyster Perpetual', 'Rolex', 'Rolex', 1000000, 2000000, 'silver', 7,'watch_pic\product1.png')
+
 
 
 USE DO_AN_WEB
@@ -106,9 +99,29 @@ VALUES
 	('Longines','0135792468','longines@gmail.com','Sweden'),
 	('Patek Philippe','0246813579','patek@gmail.com','Sweden')
 
-USE DO_AN_WEB;
+USE DO_AN_WEB
 GO
-DELETE FROM HOADONBAN;
+INSERT INTO QUANLY(ten_ql,email_ql,password_ql,sdt_ql)
+VALUES	
+	(N'Hoàng Nhật Hưng','hung@gmail.com','123','0123456789'),
+	(N'Lường Ngọc Bách','bach@gmail.com','123','0987654321'),
+	(N'Trịnh Thanh Quang','quang@gmail.com','123','0975312468')
+
+
+USE DO_AN_WEB
+GO
+INSERT INTO KHACHHANG(ten_kh,tuoi_kh,gioi_tinh,sdt_kh,email_kh,password_kh,diachi_kh)
+VALUES	
+	(N'Trịnh Thanh Quang',21,'Male','0987654321','quang@gmail.com','123',N'Thái Bình'),
+	(N'Lường Ngọc Bách',21,'Male','0123456789','bach@gmail.com','123',N'Thanh Hóa'),
+	(N'Hoàng Nhật Hưng',21,'Male','0975312468','hung@gmail.com','123',N'Hà Nội')
+
+USE DO_AN_WEB
+GO
+INSERT INTO HOADONNHAP(soluong_nhap,ma_sp,ma_nhacc,ngay_nhap,trang_thai)
+VALUES	
+	(2,1,1,GETDATE(),1)
+
 
 CREATE TRIGGER CalculateTotalPrice
 ON CTHOADONBAN
@@ -125,5 +138,10 @@ BEGIN
     WHERE mahoadon_ban IN (SELECT mahoadon_ban FROM inserted) OR
         mahoadon_ban IN (SELECT mahoadon_ban FROM deleted);
 END;
+
+USE DO_AN_WEB;
+GO
+DELETE FROM SANPHAM WHERE ;
+
 
 

@@ -24,14 +24,14 @@ If (NOT IsEmpty(Session("mycarts"))) Then
             cmdPrep.Prepared = True
 
             Dim currentDate
-currentDate = Now()
-Dim formattedDate
-formattedDate = Year(currentDate) & "-" & Right("0" & Month(currentDate), 2) & "-" & Right("0" & Day(currentDate), 2) & " " & Right("0" & Hour(currentDate), 2) & ":" & Right("0" & Minute(currentDate), 2) & ":" & Right("0" & Second(currentDate), 2)
+            currentDate = Now()
+            Dim formattedDate
+            formattedDate = Year(currentDate) & "-" & Right("0" & Month(currentDate), 2) & "-" & Right("0" & Day(currentDate), 2) & " " & Right("0" & Hour(currentDate), 2) & ":" & Right("0" & Minute(currentDate), 2) & ":" & Right("0" & Second(currentDate), 2)
 
-cmdPrep.CommandText = "INSERT INTO HOADONBAN (ngay_ban, ma_kh) VALUES (?, ?)"
-cmdPrep.Parameters.Append cmdPrep.CreateParameter("ngay_ban", 7, 1, , formattedDate)
-cmdPrep.Parameters.Append cmdPrep.CreateParameter("ma_kh", 3, 1, , Session("ma_kh"))
-cmdPrep.Execute
+            cmdPrep.CommandText = "INSERT INTO HOADONBAN (ngay_ban, ma_kh) VALUES (?, ?)"
+            cmdPrep.Parameters.Append cmdPrep.CreateParameter("ngay_ban", 7, 1, , formattedDate)
+            cmdPrep.Parameters.Append cmdPrep.CreateParameter("ma_kh", 3, 1, , Session("ma_kh"))
+            cmdPrep.Execute
 
 
 

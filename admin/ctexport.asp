@@ -178,7 +178,16 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block"><%=Session("ten_ql")%></a>
+          <% Dim currentTime
+            currentTime = Now
+          %>
+          <% If Hour(currentTime) >= 6 And Hour(currentTime) < 12 Then %>
+              <a href="#" class="d-block">Good morning, <%=Session("ten_ql")%></a>
+          <% ElseIf Hour(currentTime) >= 12 And Hour(currentTime) < 18 Then %>
+              <a href="#" class="d-block">Good afternoon, <%=Session("ten_ql")%></a>
+          <% Else %>
+              <a href="#" class="d-block">Good evening, <%=Session("ten_ql")%></a>
+          <% End If %>
         </div>
       </div>
 

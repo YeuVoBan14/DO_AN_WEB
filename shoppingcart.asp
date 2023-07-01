@@ -1,6 +1,9 @@
 <!--#include file="connect.asp"-->
 <%
 'lay ve danh sach product theo id trong my cart
+If (isnull(Session("email_kh")) OR TRIM(Session("email_kh")) = "") Then
+      Response.redirect("login.asp")
+End If
 Dim idList, mycarts, totalProduct, subtotal, statusViews, statusButtons, rs
 If (NOT IsEmpty(Session("mycarts"))) Then
   statusViews = "d-none"

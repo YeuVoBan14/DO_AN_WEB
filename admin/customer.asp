@@ -125,7 +125,7 @@
         <div class="navbar-search-block">
           <form class="form-inline">
             <div class="input-group input-group-sm">
-              <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" name="keyword">
+              <input class="form-control form-control-navbar" type="search" placeholder="Search by Name and Phone" aria-label="Search" name="keyword">
               <div class="input-group-append">
                 <button class="btn btn-navbar" type="submit">
                   <i class="fas fa-search"></i>
@@ -171,7 +171,16 @@
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block"><%=Session("ten_ql")%></a>
+          <% Dim currentTime
+            currentTime = Now
+          %>
+          <% If Hour(currentTime) >= 6 And Hour(currentTime) < 12 Then %>
+              <a href="#" class="d-block">Good morning, <%=Session("ten_ql")%></a>
+          <% ElseIf Hour(currentTime) >= 12 And Hour(currentTime) < 18 Then %>
+              <a href="#" class="d-block">Good afternoon, <%=Session("ten_ql")%></a>
+          <% Else %>
+              <a href="#" class="d-block">Good evening, <%=Session("ten_ql")%></a>
+          <% End If %>
         </div>
       </div>
 
@@ -320,7 +329,7 @@
                         cmdPrep.CommandType = 1
                         cmdPrep.Prepared = True                                            
                         if Not isnull(searchKeyword) and searchKeyword <>"" then
-                            strSQL = "SELECT * FROM KHACHHANG WHERE ten_kh LIKE '%" & searchKeyword & "%' OR sdt_kh LIKE '%" & searchKeyword & "%' ORDER BY ma_kh OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                            strSQL = "SELECT * FROM KHACHHANG WHERE ten_kh LIKE N'%" & searchKeyword & "%' OR sdt_kh LIKE '%" & searchKeyword & "%' ORDER BY ma_kh OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         End If
                         cmdPrep.CommandText = strSQL
                         cmdPrep.parameters.Append cmdPrep.createParameter("offset", 3, 1, , offset)

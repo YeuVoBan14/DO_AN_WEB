@@ -184,7 +184,6 @@
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
                 <span class="price">$<%=Result("gia_ban")%></span>
                 <a href="addCart.asp?ma_sp=<%=Result("ma_sp")%>" class="add-cart-btn">Add to Cart</a>
-                <a href="#" class="add-wish">Add to Wishlist</a>
               </div>
             </div>
           </div>

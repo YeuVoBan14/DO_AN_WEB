@@ -71,20 +71,23 @@
           <li class="nav-item">
             <a class="nav-link" href="shoppingcart.asp">My Cart</a>
           </li>
-          <%
-            If ((NOT isnull(Session("ten_kh"))) AND (TRIM(Session("ten_kh"))<>"") Or (NOT isnull(Session("ten_ql"))) AND (TRIM(Session("ten_ql"))<>"")) Then
-          %>
-                <li><span class="nav-item" style=" position: relative;top: 8px;"><a href="" class="nav-link badge text-bg-success" style="font-size: 20px;">Welcome <%=Session("ten_kh")%><%=Session("ten_ql")%>!</a></span></li>
-                <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
-          <%                        
-            Else
-          %>
-          <li>                      
-                <a href="login.asp" class="nav-link"><i class="fa-solid fa-user"></i></a>
+          <li>
+                <% If ((NOT isnull(Session("ten_kh"))) AND (TRIM(Session("ten_kh"))<>"")) Then
+                    Session.Contents.Remove("ten_ql")%>
+                    <span class="nav-link badge text-bg-success" style="font-size: 20px;">
+                      Welcome <%=Session("ten_kh")%>!
+                    </span>
+                    <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
+                <% ElseIf ((NOT isnull(Session("ten_ql"))) AND (TRIM(Session("ten_ql"))<>"")) Then
+                    Session.Contents.Remove("ten_kh")%>
+                    <span class="nav-link badge text-bg-success" style="font-size: 20px;">
+                      Welcome <%=Session("ten_ql")%>!
+                    </span>
+                    <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
+                <% Else %>
+                  <li><a href="login.asp" class="nav-link"><i class="fa-solid fa-user"></i></a></li>
+                <% End if %> 
           </li>
-          <%
-            End If
-          %>  
         </ul>
       </div>
     </div>

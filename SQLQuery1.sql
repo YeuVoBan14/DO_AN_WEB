@@ -11,7 +11,7 @@ CREATE TABLE SanPham (
     gia_ban REAL NOT NULL,
     mau_sp NCHAR(20) NOT NULL,
     soluong_ton INT NOT NULL DEFAULT 0,
-    hinh_anh_sp TEXT NOT NULL
+    hinh_anh_sp TEXT NOT NULL,
 	CONSTRAINT CK_GiaNhapGiaBan CHECK (gia_nhap < gia_ban)
 );
 create table QUANLY(

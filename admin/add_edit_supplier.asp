@@ -115,7 +115,7 @@
               </div>
               <div class="inputbox">
                 
-                <input type="number" id="sdt_nhacc" name="sdt_nhacc" required value="<%=sdt_nhacc%>">
+                <input type="text" id="sdt_nhacc" name="sdt_nhacc" required value="<%=sdt_nhacc%>">
                 <span>Phone</span>
               </div>
               <div class="inputbox">

@@ -56,7 +56,7 @@
     <div class="container-fluid">
       <div class="collapse navbar-collapse" id="navbarText" style="padding-left: 30px;">
         <form class="search-box" action="" method="">
-          <input type="text" name="keyword" value="" placeholder="Search">
+          <input type="text" name="keyword" value="" placeholder="Search by Name or Brand">
           <button class="search-btn" type="submit" name="button">
            <i class="fas fa-search"></i>
           </button>
@@ -71,22 +71,22 @@
           <li class="nav-item">
             <a class="nav-link" href="shoppingcart.asp">My Cart</a>
           </li>
-          <li>
-                <% If ((NOT isnull(Session("ten_kh"))) AND (TRIM(Session("ten_kh"))<>"")) Then
-                    Session.Contents.Remove("ten_ql")%>
-                    <span class="nav-link badge text-bg-success" style="font-size: 20px;">
-                      Welcome <%=Session("ten_kh")%>!
-                    </span>
-                    <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
-                <% ElseIf ((NOT isnull(Session("ten_ql"))) AND (TRIM(Session("ten_ql"))<>"")) Then
-                    Session.Contents.Remove("ten_kh")%>
-                    <span class="nav-link badge text-bg-success" style="font-size: 20px;">
-                      Welcome <%=Session("ten_ql")%>!
-                    </span>
-                    <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
-                <% Else %>
-                  <li><a href="login.asp" class="nav-link"><i class="fa-solid fa-user"></i></a></li>
-                <% End if %> 
+          <li style="padding-top: 7px;">
+              <% If ((NOT isnull(Session("ten_kh"))) AND (TRIM(Session("ten_kh"))<>"")) Then
+                  Session.Contents.Remove("ten_ql")%>
+                  <span class="nav-link badge text-bg-success" style="font-size: 20px;">
+                    Welcome <%=Session("ten_kh")%>!
+                  </span>
+                  <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
+              <% ElseIf ((NOT isnull(Session("ten_ql"))) AND (TRIM(Session("ten_ql"))<>"")) Then
+                  Session.Contents.Remove("ten_kh")%>
+                  <span class="nav-link badge text-bg-success" style="font-size: 20px;">
+                    Welcome <%=Session("ten_ql")%>!
+                  </span>
+                  <li><a href="logout.asp" class="nav-link"><style class="fa fa-sign-out"></style></a></li>
+              <% Else %>
+                <li><a href="login.asp" class="nav-link"><i class="fa-solid fa-user"></i></a></li>
+              <% End if %> 
           </li>
         </ul>
       </div>
@@ -147,7 +147,7 @@
     <div class="container">
     <div class="row">
     <% 
-		Dim searchKeyword, strSQL, sortParameter, sortState
+		Dim searchKeyword, strSQL
     strSQL = "SELECT * FROM SANPHAM ORDER BY ma_sp OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
 				' tim kiem
 		searchKeyword = Request.QueryString("keyword")
@@ -156,7 +156,7 @@
 		cmdPrep.CommandType = 1
 		cmdPrep.Prepared = True                                            
 		if Not isnull(searchKeyword) and searchKeyword <>"" then
-			strSQL = "SELECT * FROM SANPHAM WHERE ten_sp LIKE '%" & searchKeyword & "%' OR ten_sp LIKE '%" & searchKeyword & "%' ORDER BY ma_sp OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+			strSQL = "SELECT * FROM SANPHAM WHERE ten_sp LIKE '%" & searchKeyword & "%' OR loai LIKE '%" & searchKeyword & "%' ORDER BY ma_sp OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
 		End If
 		cmdPrep.CommandText = strSQL
 		cmdPrep.parameters.Append cmdPrep.createParameter("offset", 3, 1, , offset)

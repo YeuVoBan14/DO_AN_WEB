@@ -313,7 +313,7 @@
                             sortState = "ASC"
                             Session.Contents.Remove("SortState")
                         End If
-                        strSQL = "SELECT * FROM SANPHAM ORDER BY gia_ban OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        strSQL = "SELECT * FROM SANPHAM ORDER BY ma_sp OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         If sortState = "ASC" Then
                             strSQL = "SELECT * FROM SANPHAM ORDER BY gia_ban ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         ElseIf sortState = "DESC" Then

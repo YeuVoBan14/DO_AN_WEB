@@ -17,7 +17,7 @@ CREATE TABLE SanPham (
 create table QUANLY(
 	ma_ql INT IDENTITY(1,1),
 	ten_ql NVARCHAR(50) NOT NULL,
-	email_ql VARCHAR(50) NOT NULL,
+	email_ql VARCHAR(50) NOT NULL UNIQUE,
 	password_ql VARCHAR(50) NOT NULL,
 	sdt_ql CHAR(11) NOT NULL,
 	PRIMARY KEY (ma_ql)
@@ -28,7 +28,7 @@ create table KHACHHANG(
 	tuoi_kh INT NOT NULL,
 	gioi_tinh NVARCHAR(5) NOT NULL,
 	sdt_kh CHAR(11) NOT NULL,
-	email_kh VARCHAR(50) NOT NULL,
+	email_kh VARCHAR(50) NOT NULL UNIQUE,
 	password_kh VARCHAR(50)NOT NULL,
 	diachi_kh NVARCHAR(50) NOT NULL,
 	PRIMARY KEY (ma_kh)
@@ -37,7 +37,7 @@ create table NHACUNGCAP(
 	ma_nhacc INT IDENTITY(1,1),
 	ten_nhacc NVARCHAR(50) NOT NULL,
 	sdt_nhacc CHAR(11) NOT NULL,
-	email_nhacc VARCHAR(50)NOT NULL,
+	email_nhacc VARCHAR(50)NOT NULL UNIQUE,
 	diachi_nhacc NVARCHAR(50) NOT NULL,
 	PRIMARY KEY (ma_nhacc)
 );

@@ -27,7 +27,7 @@
 
     offset = (Clng(page) * Clng(limit)) - Clng(limit)
 
-    strSQL = "SELECT COUNT(mahoadon_nhap) AS count FROM HOADONNHAP"
+    strSQL = "SELECT COUNT(mahoadon_ban) AS count FROM HOADONBAN"
     connDB.Open()
     Set CountResult = connDB.execute(strSQL)
 
@@ -311,7 +311,7 @@
                             sortState = "ASC"
                             Session.Contents.Remove("SortState")
                         End If
-                        strSQL = "SELECT * FROM HOADONBAN ORDER BY mahoadon_nhap OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
+                        strSQL = "SELECT * FROM HOADONBAN ORDER BY mahoadon_ban OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         If sortState = "ASC" Then
                             strSQL = "SELECT * FROM HOADONBAN ORDER BY ngay_ban ASC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY"
                         ElseIf sortState = "DESC" Then
